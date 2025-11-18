@@ -1,0 +1,99 @@
+site_name: New Python Repo Template
+site_description: A modern Python project template with uv and best practices
+site_author: Liam Hsieh, PhD
+site_url: https://liam-hsieh.github.io/new-python-repo
+
+repo_name: liam-hsieh/new-python-repo
+repo_url: https://github.com/liam-hsieh/new-python-repo
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Import Patterns: getting-started/import-patterns.md
+    - Demo Applications: getting-started/demos.md
+  - Setup Guides:
+    - GitHub Pages Setup: github-pages-setup.md
+  - API Reference:
+    - Overview: api/index.md
+    - Libs Package: api/libs.md
+    - Demo Sub App: api/demo-sub-app.md
+    - Detailed Reference:
+      - Auto-Generated Index: api/reference/index.md
+      - Libs:
+        - Example Module 1: api/reference/libs/example_module1.md
+        - Logging Utils: api/reference/libs/logging_utils.md
+      - Demo Apps:
+        - Main Demo App: api/reference/demo_app.md
+        - Sub Demo App: api/reference/demo_sub_app/sub_demo_app.md
+        - Example Module 2: api/reference/demo_sub_app/example_module2.md
+  - Tutorials:
+    - Setting Up Documentation: tutorials/docs-setup.md
+    - GitHub Pages Configuration: tutorials/github-pages-config.md
+    - Logging Guide: tutorials/logging-guide.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_root_toc_entry: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true

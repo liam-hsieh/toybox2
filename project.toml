@@ -1,0 +1,22 @@
+# Project Configuration
+# This file controls various features of your Python project template
+
+[documentation]
+# Enable/disable automatic GitHub Pages deployment
+# Set to true to deploy docs automatically on push to main branch
+# Set to false to disable GitHub Pages deployment
+github_pages_enabled = true
+
+# Documentation build settings
+build_on_push = true
+build_strict = true  # Fail build on warnings
+
+[project]
+# General project settings
+auto_generate_api_docs = true
+include_demo_apps = true
+
+# Future configuration options can be added here
+# development_mode = false
+# testing_enabled = true
+# ci_cd_enabled = true

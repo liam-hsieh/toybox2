@@ -1,0 +1,183 @@
+[project]
+name = "new-python-repo"
+version = "0.1.0"
+description = "Description for new-python-repo"
+authors = [
+    {name = "Liam Hsieh, PhD", email = "liamhsieh@ieee.org"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+keywords = [
+    "python",
+]
+# Mandatory packages needed to run the application
+# Install core dependencies only
+# uv sync
+
+# Install with development tools
+# uv sync --extra dev
+
+# Install for Snow Dumper work
+# uv sync --extra snow-dumper
+
+# Install everything
+# uv sync --all-extras
+
+# Install specific combinations
+#uv sync --extra dev --extra snow-dumper
+
+dependencies = [
+    "streamlit>=1.28.0",
+    "pandas>=1.5.0",
+    "numpy>=1.21.0",
+    "pyyaml>=6.0",
+    "openpyxl>=3.0.0",
+    "xlsxwriter>=3.0.0",
+    "requests>=2.28.0",
+    "sqlalchemy>=1.4.0",
+    "plotly>=5.0.0",
+    "python-dateutil>=2.8.0",
+    "python-dotenv>=1.0.0",
+    "Office365-REST-Python-Client",
+    "ipykernel",
+    "ipython"
+]
+
+#  Install only what you need for specific features using uv sync --extra <group> 
+[project.optional-dependencies]
+# dev = [
+#     "pytest>=7.0.0",
+#     "pytest-cov>=4.0.0",
+#     "black>=23.0.0",
+#     "flake8>=6.0.0",
+#     "mypy>=1.0.0",
+#     "pre-commit>=3.0.0",
+# ]
+# enhanced = [
+#     "streamlit-authenticator>=0.2.0",
+#     "streamlit-option-menu>=0.3.0",
+#     "duckdb>=0.9.0",
+#     "sharepoint-connector>=1.0.0",
+# ]
+
+# Documentation tools - install with: uv sync --extra docs
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocstrings[python]>=0.24.0", 
+    "mkdocs-material>=9.4.0",
+    "mkdocs-autorefs>=0.5.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-section-index>=0.3.0"
+]
+
+name-of-subproject = [
+    "liamhsieh-toolbox",
+]
+
+# [project.urls]
+# Homepage = "https://e2esol.xxx.com:4002/"
+# Repository = "https://github.com/xxx-sandbox/new-python-repo"
+# Documentation = "https://github.com/xxx-sandbox/new-python-repo/README.md"
+# Issues = "https://github.com/xxx-sandbox/issues"
+
+# This section defines command-line scripts that can be run after installation
+# [project.scripts]
+# new-python-repo = "new-python-repo:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Configure what gets packaged - only include specific apps and core files
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/libs",
+    "src/demo_sub_app/example_module2.py",
+]
+include = [
+    "pages/*.py",
+    "config/*.yaml",
+    "toybox.py",
+    "README.md"
+]
+exclude = [
+    "src/*/.git",
+    "src/*/.vscode", 
+    "src/*/__pycache__",
+    "src/*/pyenv",
+    "src/*/requirements.txt",
+    "src/*/*.pdf",
+    "src/*/*.drawio"
+]
+
+# [tool.black]
+# line-length = 88
+# target-version = ['py38']
+# include = '\.pyi?$'
+# exclude = '''
+# /(
+#     \.eggs
+#   | \.git
+#   | \.hg
+#   | \.mypy_cache
+#   | \.tox
+#   | \.venv
+#   | _build
+#   | buck-out
+#   | build
+#   | dist
+# )/
+# '''
+
+# [tool.mypy]
+# python_version = "3.14"
+# warn_return_any = true
+# warn_unused_configs = true
+# disallow_untyped_defs = true
+# ignore_missing_imports = true
+
+# [tool.pytest.ini_options]
+# minversion = "7.0"
+# addopts = "-ra -q --strict-markers --strict-config"
+# testpaths = [
+#     "tests",
+# ]
+# filterwarnings = [
+#     "error",
+#     "ignore::UserWarning",
+#     "ignore::DeprecationWarning",
+# ]
+
+# [tool.coverage.run]
+# source = ["apps", "pages"]
+# omit = [
+#     "*/tests/*",
+#     "*/venv/*",
+#     "*/__pycache__/*",
+# ]
+
+# [tool.coverage.report]
+# exclude_lines = [
+#     "pragma: no cover",
+#     "def __repr__",
+#     "if self.debug:",
+#     "if settings.DEBUG",
+#     "raise AssertionError",
+#     "raise NotImplementedError",
+#     "if 0:",
+#     "if __name__ == .__main__.:",
+#     "class .*\\bProtocol\\):",
+#     "@(abc\\.)?abstractmethod",
+# ]
