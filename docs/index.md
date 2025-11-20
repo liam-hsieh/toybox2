@@ -97,29 +97,24 @@ uv run --python 3.12 toybox.py
 
 Toybox 2.0 uses a three-tier configuration system:
 
-```
-┌─────────────────────────────────────────┐
-│         config/projects.yaml            │
-│  (Application metadata & file paths)    │
-└────────────────┬────────────────────────┘
-                 │
-┌────────────────▼────────────────────────┐
-│        config/navigation.yaml           │
-│  (Navigation structure & permissions)   │
-└────────────────┬────────────────────────┘
-                 │
-┌────────────────▼────────────────────────┐
-│          config/auth.yaml               │
-│      (User credentials & roles)         │
-└─────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────┐
-│      apps/shared/utils.py               │
-│  generate_dynamic_navigation(role)      │
-│  ↓                                      │
-│  Returns list of st.Page objects        │
-└─────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  A["projects.yaml<br/><small>App metadata</small>"]
+  B["navigation.yaml<br/><small>Structure & permissions</small>"]
+  C["auth.yaml<br/><small>User credentials</small>"]
+  D["utils.py<br/><small>Navigation generator</small>"]
+  E["st.Page objects"]
+  
+  A --> D
+  B --> D
+  C --> D
+  D --> E
+  
+  style A fill:#e1f5ff,stroke:#0288d1
+  style B fill:#e1f5ff,stroke:#0288d1
+  style C fill:#e1f5ff,stroke:#0288d1
+  style D fill:#f3e5f5,stroke:#7b1fa2
+  style E fill:#f3e5f5,stroke:#7b1fa2
 ```
 
 **Configuration Flow:**
@@ -132,53 +127,61 @@ Toybox 2.0 uses a three-tier configuration system:
 
 <div class="grid cards" markdown>
 
--   :material-clock-fast:{ .lg .middle } **Getting Started**
+-   **:material-clock-fast: Getting Started**
 
     ---
 
     Quick installation and first-time setup
     
-    [:octicons-arrow-right-24: Quick Start](getting-started/quick-start.md)
+    [Quick Start :octicons-arrow-right-24:](getting-started/quick-start.md)
 
--   :material-file-tree:{ .lg .middle } **Architecture**
+-   **:material-file-tree: Architecture**
 
     ---
 
     System design and configuration system
     
-    [:octicons-arrow-right-24: Architecture Guide](architecture/overview.md)
+    [Architecture Guide :octicons-arrow-right-24:](architecture/overview.md)
 
--   :material-code-braces:{ .lg .middle } **Sub-App Development**
+-   **:material-code-braces: Sub-App Development**
 
     ---
 
     Create and integrate new applications
     
-    [:octicons-arrow-right-24: Development Guide](SUB_APP_DEVELOPMENT_GUIDE.md)
+    [Development Guide :octicons-arrow-right-24:](SUB_APP_DEVELOPMENT_GUIDE.md)
 
--   :material-school:{ .lg .middle } **Tutorials**
+-   **:material-school: Tutorials**
 
     ---
 
     Step-by-step guides for common tasks
     
-    [:octicons-arrow-right-24: View Tutorials](tutorials/adding-sub-app.md)
+    [View Tutorials :octicons-arrow-right-24:](tutorials/adding-sub-app.md)
 
--   :material-key:{ .lg .middle } **Environment Variables**
+-   **:material-key: Environment Variables**
 
     ---
 
     Securely manage secrets with .env files
     
-    [:octicons-arrow-right-24: Environment Setup](tutorials/environment-variables.md)
+    [Environment Setup :octicons-arrow-right-24:](tutorials/environment-variables.md)
 
--   :material-api:{ .lg .middle } **API Documentation**
+-   **:material-file-document-edit: Writing Documentation**
+
+    ---
+
+    Learn special syntax for beautiful docs
+    
+    [Writing Guide :octicons-arrow-right-24:](tutorials/documentation-writing.md)
+
+-   **:material-api: API Documentation**
 
     ---
 
     Auto-generate API docs from source code
     
-    [:octicons-arrow-right-24: API Guide](tutorials/api-documentation.md)
+    [API Guide :octicons-arrow-right-24:](tutorials/api-documentation.md)
 
 </div>
 

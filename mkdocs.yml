@@ -44,6 +44,7 @@ nav:
   - Tutorials:
     - Adding Sub-Applications: tutorials/adding-sub-app.md
     - Environment Variables (.env): tutorials/environment-variables.md
+    - Writing Documentation: tutorials/documentation-writing.md
     - API Documentation: tutorials/api-documentation.md
     - Testing Documentation: tutorials/documentation-testing.md
     - Production Documentation Server: tutorials/documentation-production-server.md
@@ -85,6 +86,9 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - attr_list
   - md_in_html
   - toc:

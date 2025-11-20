@@ -13,39 +13,46 @@ For production documentation serving, we recommend:
 
 ## Architecture
 
-```
-┌──────────────────────────────────────────────────┐
-│  Git Repository (GitHub/GitLab)                  │
-│  - docs/ directory                               │
-│  - mkdocs.yml                                    │
-└─────────────────┬────────────────────────────────┘
-                  │
-                  │ Git Pull (manual or automated)
-                  ▼
-┌──────────────────────────────────────────────────┐
-│  Production Server                               │
-│  /var/www/toybox-docs/                          │
-│  ├── docs/                                       │
-│  ├── mkdocs.yml                                  │
-│  └── site/  ← Generated HTML                    │
-└─────────────────┬────────────────────────────────┘
-                  │
-                  │ File Watcher (inotify-tools)
-                  │ or Git Hooks (post-merge)
-                  ▼
-┌──────────────────────────────────────────────────┐
-│  Auto-Build Service (systemd)                    │
-│  Watches: docs/, mkdocs.yml                     │
-│  Action: mkdocs build                            │
-└─────────────────┬────────────────────────────────┘
-                  │
-                  │ Serves static files
-                  ▼
-┌──────────────────────────────────────────────────┐
-│  Nginx/Apache Web Server                         │
-│  Port: 80/443                                    │
-│  DocumentRoot: /var/www/toybox-docs/site/       │
-└──────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  Git["Git Repository<br/><small>GitHub/GitLab</small>"]
+  Server["Production Server<br/><small>/var/www/toybox-docs/</small>"]
+  Build["Auto-Build Service<br/><small>systemd + mkdocs</small>"]
+  Web["Web Server<br/><small>Nginx/Apache</small>"]
+  
+  Git -->|"Git Pull<br/>(manual/automated)"| Server
+  Server -->|"File Watch<br/>(inotify/git hooks)"| Build
+  Build -->|"Serves static files"| Web
+  
+  subgraph Git[" "]
+    direction TB
+    G1["docs/ directory"]
+    G2["mkdocs.yml"]
+  end
+  
+  subgraph Server[" "]
+    direction TB
+    S1["docs/"]
+    S2["mkdocs.yml"]
+    S3["site/ (generated)"]
+  end
+  
+  subgraph Build[" "]
+    direction TB
+    B1["Watch: docs/, mkdocs.yml"]
+    B2["Action: mkdocs build"]
+  end
+  
+  subgraph Web[" "]
+    direction TB
+    W1["Port: 80/443"]
+    W2["Root: /var/www/toybox-docs/site/"]
+  end
+  
+  style Git fill:#e3f2fd,stroke:#1976d2
+  style Server fill:#f3e5f5,stroke:#7b1fa2
+  style Build fill:#fff3e0,stroke:#f57c00
+  style Web fill:#e8f5e9,stroke:#388e3c
 ```
 
 ## Option 1: Static Build + Nginx (Recommended)
@@ -634,12 +641,12 @@ Point your domain to Cloudflare or similar CDN for:
 ## Recommended Setup Summary
 
 **For Production:**
-1. ✅ Static build with Nginx
-2. ✅ Systemd timer for auto-rebuild (every 10 minutes)
-3. ✅ Git hooks for instant updates
-4. ✅ SSL/TLS with Let's Encrypt
-5. ✅ Monitoring with systemd journal
-6. ✅ Backup strategy for `/var/www/toybox-docs`
+1. Static build with Nginx  
+2. Systemd timer for auto-rebuild (every 10 minutes)  
+3. Git hooks for instant updates  
+4. SSL/TLS with Let's Encrypt  
+5. Monitoring with systemd journal  
+6. Backup strategy for `/var/www/toybox-docs`  
 
 **Quick Setup Commands:**
 

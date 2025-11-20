@@ -6,55 +6,61 @@ Toybox 2.0 is built on a configuration-driven architecture that separates concer
 
 ### High-Level Design
 
-```
-┌────────────────────────────────────────────────────────┐
-│                     User Browser                       │
-│                  (http://localhost:8501)               │
-└───────────────────────┬────────────────────────────────┘
-                        │
-                        ▼
-┌────────────────────────────────────────────────────────┐
-│                    toybox.py                           │
-│              (Main Entry Point)                        │
-│  • Load logging configuration                          │
-│  • Initialize authentication                           │
-│  • Generate dynamic navigation                         │
-└───────────────────────┬────────────────────────────────┘
-                        │
-                        ▼
-┌────────────────────────────────────────────────────────┐
-│              Streamlit Authenticator                   │
-│  • User login/logout                                   │
-│  • Session management                                  │
-│  • Role extraction                                     │
-└───────────────────────┬────────────────────────────────┘
-                        │
-                        ▼
-┌────────────────────────────────────────────────────────┐
-│        apps/shared/utils.generate_dynamic_navigation() │
-│  • Load config/navigation.yaml                         │
-│  • Load config/projects.yaml                           │
-│  • Filter sections by user role                        │
-│  • Build st.Page list                                  │
-└───────────────────────┬────────────────────────────────┘
-                        │
-                        ▼
-┌────────────────────────────────────────────────────────┐
-│              st.navigation(pages)                      │
-│  • Render navigation sidebar                           │
-│  • Execute selected page                               │
-└────────────────────────────────────────────────────────┘
-                        │
-                        ▼
-┌────────────────────────────────────────────────────────┐
-│              Individual Sub-Applications               │
-│  apps/demo_app/main.py                                 │
-│  apps/welcome/welcome.py                               │
-│  apps/utilities/analyzer.py                            │
-│  • Independent execution logic                         │
-│  • Shared utility imports                              │
-│  • Dual-mode support                                   │
-└────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  Browser["User Browser<br/><small>http://localhost:8501</small>"]
+  Entry["toybox.py<br/><small>Main Entry Point</small>"]
+  Auth["Streamlit Authenticator<br/><small>User login & session</small>"]
+  Nav["generate_dynamic_navigation<br/><small>Build navigation</small>"]
+  Pages["st.navigation()<br/><small>Render & execute</small>"]
+  Apps["Sub-Applications<br/><small>demo_app, welcome, utilities</small>"]
+  
+  Browser --> Entry
+  Entry --> Auth
+  Auth --> Nav
+  Nav --> Pages
+  Pages --> Apps
+  
+  subgraph Entry[" "]
+    direction TB
+    E1["Load logging"]
+    E2["Initialize auth"]
+    E3["Generate navigation"]
+  end
+  
+  subgraph Auth[" "]
+    direction TB
+    A1["Login/logout"]
+    A2["Session mgmt"]
+    A3["Role extraction"]
+  end
+  
+  subgraph Nav[" "]
+    direction TB
+    N1["Load YAML configs"]
+    N2["Filter by role"]
+    N3["Build st.Page list"]
+  end
+  
+  subgraph Pages[" "]
+    direction TB
+    P1["Render sidebar"]
+    P2["Execute page"]
+  end
+  
+  subgraph Apps[" "]
+    direction TB
+    AP1["Independent logic"]
+    AP2["Shared utilities"]
+    AP3["Dual-mode support"]
+  end
+  
+  style Browser fill:#e3f2fd,stroke:#1976d2
+  style Entry fill:#f3e5f5,stroke:#7b1fa2
+  style Auth fill:#fff3e0,stroke:#f57c00
+  style Nav fill:#e8f5e9,stroke:#388e3c
+  style Pages fill:#fce4ec,stroke:#c2185b
+  style Apps fill:#f1f8e9,stroke:#689f38
 ```
 
 ## Core Components
