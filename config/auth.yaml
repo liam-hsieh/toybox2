@@ -1,0 +1,30 @@
+# Authentication Configuration for Toybox 2.0
+
+# Database connection for user verification
+# Note: ini_path will be overridden by DB_INI_PATH environment variable if set
+database:
+  ini_path: "/opt/ssl/db.ini"  # fallback default
+  
+# Authentication methods
+auth_methods:
+  cookie_based: true
+  browser_detection: true
+  
+# Cookie settings
+cookies:
+  required_cookies: "IDSID"  # Intel ID Session ID
+  
+# Session management
+session:
+  timeout_minutes: 480  # 8 hours
+  remember_user: true
+  
+# Security settings
+security:
+  require_intel_domain: true
+  allowed_browsers:
+    - "Chrome"
+    - "Firefox" 
+    - "Edge"
+  blocked_browsers:
+    - "Internet Explorer"

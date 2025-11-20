@@ -1,0 +1,85 @@
+# Project Configuration for Toybox 2.0
+
+projects:
+  welcome:
+    name: "Welcome"
+    description: "Welcome page"
+    icon: "👋"
+    apps:
+      welcome:
+        title: "Welcome"
+        description: "Welcome to Toybox 2.0"
+        icon: "👋"
+        path: "pages/00_Welcome.py"
+  
+  utilities:
+    name: "Collection of Utilities"
+    description: "Various utility applications"
+    icon: "🧰"
+    apps:
+      # worksheet_comparison:
+      #   title: "Worksheet Comparison"
+      #   description: "Compare and analyze Excel worksheets"
+      #   icon: "📊"
+      #   path: "apps/worksheets-comparison/ws_comparison_app.py"
+      plt_practice:
+        title: "Matplotlib Practice"
+        description: "Live matplotlib plotting and visualization practice"
+        icon: "🎨"
+        path: "apps/utils/plt_practice.py"
+  demo_apps:
+    name: "Demo Applications"
+    description: "Demonstration applications showcasing various features"
+    icon: "🚀"
+    apps:
+      demo_app1:
+        title: "Demo App 1"
+        description: "Package-based import demonstration"
+        icon: "📦"
+        path: "apps/demo_app/demo_app1.py"
+      demo_app2:
+        title: "Demo App 2"
+        description: "Direct import demonstration"
+        icon: "📥"
+        path: "apps/demo_app/demo_app2.py"
+      # sys_conf:
+      #   title: "System Configuration"
+      #   description: "System configuration and settings management"
+      #   icon: "⚙️"
+      #   path: "apps/data_prep/sys_conf.py"
+  
+  system:
+    name: "System Pages"
+    description: "Core system pages and dashboards"
+    icon: "⚙️"
+    apps:
+      dashboard:
+        title: "System Overview"
+        description: "Main dashboard with system overview"
+        icon: "🏠"
+        path: "pages/01_Dashboard.py"
+      analytics:
+        title: "Data/Application Analysis"
+        description: "Analytics and reporting dashboard"
+        icon: "📊"
+        path: "pages/02_Analytics.py"
+      admin:
+        title: "System Admin"
+        description: "System administration and configuration"
+        icon: "🛠️"
+        path: "pages/03_Admin.py"
+
+# Project dependencies and requirements
+dependencies:
+  shared_packages:
+    - streamlit
+    - pandas
+    - numpy
+    - pyyaml
+  
+  project_specific:
+    demo_apps:
+      - openpyxl
+      - st-aggrid
+      - flask
+      - requests

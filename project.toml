@@ -5,16 +5,16 @@
 # Enable/disable automatic GitHub Pages deployment
 # Set to true to deploy docs automatically on push to main branch
 # Set to false to disable GitHub Pages deployment
-github_pages_enabled = true
+github_pages_enabled = false
 
 # Documentation build settings
-build_on_push = true
-build_strict = true  # Fail build on warnings
+build_on_push = false
+build_strict = false  # Fail build on warnings
 
 [project]
 # General project settings
-auto_generate_api_docs = true
-include_demo_apps = true
+auto_generate_api_docs = false
+include_demo_apps = false
 
 # Future configuration options can be added here
 # development_mode = false

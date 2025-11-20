@@ -1,13 +1,13 @@
 [project]
-name = "new-python-repo"
+name = "toybox2"
 version = "0.1.0"
-description = "Description for new-python-repo"
+description = "A Multi-pages Streamlit Application Template"
 authors = [
     {name = "Liam Hsieh, PhD", email = "liamhsieh@ieee.org"}
 ]
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = ">=3.12"
+requires-python = "==3.12.0"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -38,7 +38,7 @@ keywords = [
 #uv sync --extra dev --extra snow-dumper
 
 dependencies = [
-    "streamlit>=1.28.0",
+    "streamlit>=1.51.0",
     "pandas>=1.5.0",
     "numpy>=1.21.0",
     "pyyaml>=6.0",
@@ -50,6 +50,7 @@ dependencies = [
     "python-dateutil>=2.8.0",
     "python-dotenv>=1.0.0",
     "Office365-REST-Python-Client",
+    "snowflake-connector-python>=3.0.0",
     "ipykernel",
     "ipython"
 ]
@@ -81,11 +82,14 @@ docs = [
     "mkdocs-literate-nav>=0.6.0",
     "mkdocs-section-index>=0.3.0"
 ]
-
-name-of-subproject = [
-    "liamhsieh-toolbox",
-]
-
+snow-dumper = [
+        "duckdb>=0.9.0",
+        "snowflake-connector-python>=3.0.0",
+    ]
+# name-of-subproject = [
+#     "liamhsieh-toolbox",
+# ]
+worksheets-comparison = ["matplotlib"]
 # [project.urls]
 # Homepage = "https://e2esol.xxx.com:4002/"
 # Repository = "https://github.com/xxx-sandbox/new-python-repo"
@@ -104,7 +108,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = [
     "src/libs",
-    "src/demo_sub_app/example_module2.py",
+    "apps/shared",
+    "apps/demo_app/demo_package",
+    # "src/demo_sub_app/example_module2.py",
 ]
 include = [
     "pages/*.py",
@@ -119,7 +125,14 @@ exclude = [
     "src/*/pyenv",
     "src/*/requirements.txt",
     "src/*/*.pdf",
-    "src/*/*.drawio"
+    "src/*/*.drawio",
+    "apps/shared/*/.git",
+    "apps/shared/*/.vscode", 
+    "apps/shared/*/__pycache__",
+    "apps/shared/*/pyenv",
+    "apps/shared/*/requirements.txt",
+    "apps/shared/*/*.pdf",
+    "apps/shared/*/*.drawio",
 ]
 
 # [tool.black]

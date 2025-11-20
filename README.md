@@ -1,23 +1,39 @@
-# New Python Project Template
+# Toybox 2.0 - Multi-Page Streamlit Application Framework
 
-This is a template repository for creating new Python projects with modern tooling and best practices, using [uv](https://github.com/astral-sh/uv) for fast dependency management.
+**A modern, production-ready framework for building scalable multi-page Streamlit applications with role-based access control, dynamic navigation, and modular architecture.**
+
+Built with [UV](https://github.com/astral-sh/uv) for blazing-fast dependency management and [Streamlit](https://streamlit.io/) native multipage navigation.
 
 ## Features
 
-- **Fast dependency management** with `uv` instead of pip/conda
-- **Modern Python packaging** with `pyproject.toml` 
-- **Flexible dependency groups** for development, testing, and optional features
-- **Pre-configured project structure** with src layout
-- **Professional documentation** with MkDocs + mkdocstrings
-- **Two demo applications** showcasing different import patterns
-- **Git integration** with comprehensive `.gitignore`
-- **Ready for CI/CD** with standardized configuration
+**Dynamic YAML-Based Navigation**
+- Fully configuration-driven page routing
+- No hardcoded navigation logic
+- Automatic page generation from YAML files
+
+**Role-Based Access Control**
+- Multi-role support (admin, developer, analyst, viewer)
+- Section-based permission system
+- Configuration-driven authorization
+
+**Modular Sub-App Architecture**
+- Independent sub-applications with dual-mode execution
+- Standalone and integrated operation modes
+- Clean separation of concerns
+
+**Modern Python Stack**
+- UV package manager for 10-100x faster dependency resolution
+- Python 3.12+ with modern `pyproject.toml` configuration
+- Optional dependency groups for flexible installation
+
+**Professional Documentation**
+- MkDocs with Material theme
+- Auto-generated API documentation
+- Comprehensive development guides
 
 ## Quick Start
 
-### 1. Install uv
-
-If you don't have `uv` installed yet:
+### 1. Install UV
 
 ```bash
 # On macOS and Linux
@@ -30,636 +46,707 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 pip install uv
 ```
 
-### 2. Create Your New Project
-
-1. **Use this template**: Click "Use this template" button or clone this repository
-   ```bash
-   git clone https://github.com/liam-hsieh/new-python-repo.git <your-new-project-name>
-   ```
-2. **Navigate to your project directory**:
-   ```bash
-   cd your-new-project-name
-   ```
-3. **Update project metadata** in `pyproject.toml`:
-   - Change `name` from "new-python-repo" to your project name
-   - Update `description`, `authors`, and other metadata
-   - Modify `dependencies` and `optional-dependencies` as needed
-
-### 3. Try the Demo Applications
-
-**Run the included demo apps to understand different import patterns:**
+### 2. Install Dependencies
 
 ```bash
-# Run the demo selection script
-./run_demo.sh
+# Clone the repository
+cd toybox2
 
-# Or run specific demos directly
-./run_demo.sh 1    # Package-based imports
-./run_demo.sh 2    # Direct module imports
+# Install core dependencies
+uv sync
+
+# Or install with all optional features
+uv sync --all-extras
 ```
 
-## Demo Applications & Import Patterns
+### 3. Configure Authentication
 
-This template includes two demo applications that showcase different approaches to organizing and importing custom Python modules:
+Create `config/auth.yaml`:
 
-### Demo 1: Package-Based Imports (`src/demo_app.py`)
+```yaml
+credentials:
+  usernames:
+    admin:
+      email: admin@example.com
+      name: Admin User
+      password: $2b$12$...  # bcrypt hash
+      role: admin
+    developer:
+      email: dev@example.com
+      name: Developer User
+      password: $2b$12$...
+      role: developer
+
+cookie:
+  expiry_days: 30
+  key: your_secret_key_here
+  name: toybox_auth_cookie
+
+preauthorized:
+  emails:
+    - admin@example.com
+```
+
+### 4. Run Toybox
+
+```bash
+# Run the main application
+uv run --python 3.12 toybox.py
+
+# Access at http://localhost:8501
+```
+
+## Architecture
+
+### Directory Structure
+
+```
+toybox2/
+├── config/
+│   ├── projects.yaml         # Project and app definitions
+│   ├── navigation.yaml       # Navigation structure and permissions
+│   └── auth.yaml            # User credentials and roles
+├── apps/
+│   ├── shared/
+│   │   ├── utils.py         # Dynamic navigation generator
+│   │   └── constants.py     # Shared constants
+│   ├── demo_app/            # Example sub-application
+│   │   ├── main.py         # App entry point
+│   │   └── utils.py        # App-specific utilities
+│   └── welcome/             # Welcome page application
+├── docs/                    # MkDocs documentation
+├── toybox.py               # Main application entry point
+├── pyproject.toml          # Project configuration
+└── logging.ini             # Logging configuration
+```
+
+### Configuration System
+
+#### 1. Projects Configuration (`config/projects.yaml`)
+
+Defines available applications and their metadata:
+
+```yaml
+projects:
+  welcome:
+    name: "Welcome"
+    apps:
+      welcome_page:
+        name: "Welcome"
+        path: "apps/welcome/welcome.py"
+        icon: "🏠"
+        description: "Welcome to Toybox 2.0"
+
+  demo_apps:
+    name: "Demo Applications"
+    apps:
+      demo_app:
+        name: "Demo App"
+        path: "apps/demo_app/main.py"
+        icon: "🎯"
+        description: "Example Streamlit application"
+```
+
+#### 2. Navigation Configuration (`config/navigation.yaml`)
+
+Defines role-based navigation structure:
+
+```yaml
+roles:
+  admin:
+    sections:
+      - welcome
+      - demo_apps
+      - utilities
+      - system
+  developer:
+    sections:
+      - welcome
+      - demo_apps
+      - utilities
+  analyst:
+    sections:
+      - welcome
+      - demo_apps
+
+sections:
+  welcome:
+    title: "🏠 Welcome"
+    pages:
+      - welcome.welcome_page
+  demo_apps:
+    title: "🎯 Demo Applications"
+    pages:
+      - demo_apps.demo_app
+```
+
+#### 3. Authentication Configuration (`config/auth.yaml`)
+
+Manages user credentials and roles (see Quick Start section for format).
+
+### Dynamic Navigation System
+
+Navigation is completely configuration-driven:
+
 ```python
-from libs.example_module1 import import_checking1
+# apps/shared/utils.py
+def generate_dynamic_navigation(role: str) -> list:
+    """Generate navigation based on user role and YAML configuration."""
+    
+    # Load configuration files
+    projects = yaml.safe_load(open('config/projects.yaml'))
+    navigation = yaml.safe_load(open('config/navigation.yaml'))
+    
+    # Get authorized sections for role
+    sections = navigation['roles'][role]['sections']
+    
+    # Build page list from configuration
+    pages = []
+    for section_key in sections:
+        section = navigation['sections'][section_key]
+        for page_key in section['pages']:
+            project, app = page_key.split('.')
+            app_config = projects['projects'][project]['apps'][app]
+            
+            pages.append(st.Page(
+                page=app_config['path'],
+                title=app_config['name'],
+                icon=app_config['icon']
+            ))
+    
+    return pages
 ```
 
-**Best for:**
-- Reusable libraries and packages
-- Complex projects with multiple modules
-- When you want to distribute your code as a package
+**Key Benefits:**
+- Zero hardcoded navigation logic
+- Easy to add/remove pages via YAML edits
+- Role-based access control without code changes
+- Automatic icon and title management
 
-**Structure:**
-```
-src/
-├── libs/
-│   ├── __init__.py           # Makes it a Python package
-│   └── example_module1.py    # Your module code
-└── demo_app.py               # Uses package import
-```
+## Sub-App Development
 
-**Configuration in pyproject.toml:**
-```toml
-[tool.hatch.build.targets.wheel]
-packages = ["src/libs"]  # Include entire libs package
-```
+### Creating a New Sub-App
 
-### Demo 2: Direct Module Imports (`src/demo_sub_app/sub_demo_app.py`)
-```python
-from example_module2 import import_checking2
-```
-
-**Best for:**
-- Simple utilities and standalone modules
-- Single-file modules in the same directory
-- Quick prototyping and simple scripts
-
-**Structure:**
-```
-src/
-└── demo_sub_app/
-    ├── __init__.py
-    ├── sub_demo_app.py       # Your main app
-    └── example_module2.py    # Module in same directory
-```
-
-**pyproject.toml Configuration:**
-```toml
-[tool.hatch.build.targets.wheel]
-packages = ["src/demo_sub_app/example_module2.py"]  # Include specific file
-```
-
-###Choosing the Right Approach
-
-| Scenario | Use Demo 1 (Package) | Use Demo 2 (Direct) |
-|----------|---------------------|----------------------|
-| **Multiple related modules** | Yes | No |
-| **Single utility module** | No | Yes |
-| **Plan to distribute as package** | Yes | No |
-| **Quick prototype/script** | No | Yes |
-| **Complex project structure** | Yes | No |
-| **Simple directory structure** | No | Yes |
-
-## Setting Up Your Project
-
-### For Package-Based Approach (Recommended)
-
-1. **Create your package structure:**
+1. **Create app directory:**
    ```bash
-   mkdir -p src/mypackage
-   touch src/mypackage/__init__.py
+   mkdir -p apps/my_new_app
    ```
 
-2. **Add your modules:**
+2. **Create main application file (`apps/my_new_app/main.py`):**
    ```python
-   # src/mypackage/utils.py
-   def my_function():
-       return "Hello from package!"
+   import streamlit as st
+   import sys
+   from pathlib import Path
+   
+   # Add apps directory to sys.path for dual-mode execution
+   if __name__ == "__main__":
+       apps_dir = str(Path(__file__).parent.parent)
+       if apps_dir not in sys.path:
+           sys.path.insert(0, apps_dir)
+   
+   from shared.constants import APP_TITLE
+   
+   def main():
+       st.title("My New App")
+       st.write("Application content here")
+   
+   if __name__ == "__main__":
+       # Standalone mode
+       main()
+   else:
+       # Integrated mode (called by Streamlit navigation)
+       main()
    ```
 
-3. **Update pyproject.toml:**
+3. **Add to `config/projects.yaml`:**
+   ```yaml
+   projects:
+     utilities:  # Or create new section
+       name: "Utilities"
+       apps:
+         my_new_app:
+           name: "My New App"
+           path: "apps/my_new_app/main.py"
+           icon: "🔧"
+           description: "Description of my app"
+   ```
+
+4. **Add to `config/navigation.yaml`:**
+   ```yaml
+   sections:
+     utilities:
+       title: "🔧 Utilities"
+       pages:
+         - utilities.my_new_app
+   
+   roles:
+     admin:
+       sections:
+         - utilities  # Ensure section is in role list
+   ```
+
+5. **Update `pyproject.toml` (if creating a package):**
    ```toml
    [tool.hatch.build.targets.wheel]
-   packages = ["src/mypackage"]
+   packages = [
+       "apps/shared",
+       "apps/my_new_app"  # Add your app
+   ]
    ```
 
-4. **Import in your apps:**
-   ```python
-   from mypackage.utils import my_function
+### Dual-Mode Execution Pattern
+
+All sub-apps support two execution modes:
+
+**Standalone Mode:**
+```bash
+# Run directly for development/testing
+python apps/my_new_app/main.py
+streamlit run apps/my_new_app/main.py
+```
+
+**Integrated Mode:**
+```bash
+# Run through Toybox navigation
+uv run --python 3.12 toybox.py
+```
+
+**Implementation Pattern:**
+```python
+import sys
+from pathlib import Path
+
+# Ensure apps directory in sys.path for imports
+if __name__ == "__main__":
+    apps_dir = str(Path(__file__).parent.parent)
+    if apps_dir not in sys.path:
+        sys.path.insert(0, apps_dir)
+
+# Now imports work in both modes
+from shared.utils import some_utility
+from shared.constants import CONSTANTS
+
+def main():
+    # Your app logic
+    pass
+
+if __name__ == "__main__":
+    main()  # Standalone execution
+else:
+    main()  # Called by Streamlit navigation
+```
+
+### Import Patterns
+
+**Recommended Pattern:**
+```python
+# Use absolute imports from apps directory
+from shared.utils import generate_dynamic_navigation
+from shared.constants import APP_TITLE
+from demo_app.utils import process_data
+```
+
+**Avoid:**
+```python
+# Avoid relative imports - Streamlit navigation doesn't preserve package context
+from ..shared.utils import something  # ❌ Will fail in integrated mode
+from .utils import local_function      # ❌ May fail depending on execution mode
+```
+
+## Dependency Management
+
+### Core Commands
+
+```bash
+# Install core dependencies
+uv sync
+
+# Install with optional groups
+uv sync --extra demo_app
+uv sync --extra docs
+
+# Install everything
+uv sync --all-extras
+
+# Add new dependencies
+uv add pandas
+uv add --optional-group demo_app plotly
+```
+
+### Dependency Groups
+
+**Core Dependencies (always installed):**
+- `streamlit` - Web application framework
+- `streamlit-authenticator` - Authentication system
+- `pyyaml` - Configuration file parsing
+- `pandas` - Data manipulation
+- `numpy` - Numerical computing
+
+**Optional Groups:**
+- `demo_app` - Demo application dependencies
+- `docs` - Documentation generation (MkDocs, mkdocstrings)
+
+## Configuration Management
+
+### Adding New Roles
+
+Edit `config/auth.yaml`:
+
+```yaml
+credentials:
+  usernames:
+    new_user:
+      email: user@example.com
+      name: New User
+      password: $2b$12$...  # Generate with bcrypt
+      role: analyst  # admin, developer, analyst, viewer
+```
+
+Then ensure role exists in `config/navigation.yaml`:
+
+```yaml
+roles:
+  analyst:
+    sections:
+      - welcome
+      - demo_apps
+```
+
+### Adding New Sections
+
+1. **Define section in `config/navigation.yaml`:**
+   ```yaml
+   sections:
+     analytics:
+       title: "📊 Analytics"
+       pages:
+         - analytics.dashboard
+         - analytics.reports
    ```
 
-### For Direct Module Approach
-
-1. **Create your app directory:**
-   ```bash
-   mkdir -p src/myapp
-   touch src/myapp/__init__.py
+2. **Add to role permissions:**
+   ```yaml
+   roles:
+     admin:
+       sections:
+         - analytics
    ```
 
-2. **Add module in same directory:**
-   ```python
-   # src/myapp/helper.py
-   def helper_function():
-       return "Hello from helper!"
+3. **Define projects in `config/projects.yaml`:**
+   ```yaml
+   projects:
+     analytics:
+       name: "Analytics Tools"
+       apps:
+         dashboard:
+           name: "Dashboard"
+           path: "apps/analytics/dashboard.py"
+           icon: "📊"
+         reports:
+           name: "Reports"
+           path: "apps/analytics/reports.py"
+           icon: "📈"
    ```
 
-3. **Update pyproject.toml:**
-   ```toml
-   [tool.hatch.build.targets.wheel]
-   packages = ["src/myapp/helper.py"]
-   ```
+## Documentation
 
-4. **Import in your app:**
-   ```python
-   # src/myapp/main.py
-   from helper import helper_function
-   ```
-
-### Converting Between Approaches
-
-**From Direct to Package:**
-1. Create a package directory with `__init__.py`
-2. Move your module files into the package
-3. Update imports to use package notation
-4. Update pyproject.toml packages list
-
-**From Package to Direct:**
-1. Move module files to your app directory
-2. Update imports to direct module names
-3. Update pyproject.toml to list individual files
-
-## Documentation with MkDocs
-
-This template includes professional documentation setup using **MkDocs** with **Material theme** and **mkdocstrings** for automatic API documentation.
-
-### Quick Documentation Setup
+### Viewing Documentation
 
 ```bash
 # Install documentation dependencies
 uv sync --extra docs
 
-# Start documentation server
+# Start documentation server (localhost only)
 uv run mkdocs serve
 
-# Visit http://127.0.0.1:8000 to see your docs
+# Access at http://127.0.0.1:8000
 ```
 
-### Features Included
+### Testing Documentation Locally
 
-- **Auto-generated API docs** from Python docstrings
-- **Beautiful Material Design** theme with dark/light mode
-- **Full-text search** functionality
-- **Mobile-responsive** design
-- **Live reload** during development
-- **Code syntax highlighting**
+To test documentation on your local network or from remote machines:
+
+```bash
+# Serve on all network interfaces with custom port
+uv run mkdocs serve -a 0.0.0.0:8011
+
+# Access from:
+# - Local machine: http://localhost:8011
+# - Same network: http://<your-ip>:8011
+```
+
+**Find your IP address:**
+```bash
+# Linux/macOS
+ip addr show | grep "inet " | grep -v 127.0.0.1
+
+# Or use hostname
+hostname -I
+```
+
+### Building Documentation
+
+```bash
+# Build static HTML
+uv run mkdocs build
+
+# Output in site/ directory
+```
 
 ### Documentation Structure
 
 ```
 docs/
-├── index.md                    # Homepage
+├── index.md                          # Documentation homepage
 ├── getting-started/
-│   ├── quick-start.md         # Installation & setup
-│   ├── import-patterns.md     # Module organization guide
-│   └── demos.md               # Demo applications guide
-├── api/                       # Auto-generated API docs
-│   ├── libs.md               # Package-based modules
-│   └── demo-sub-app.md       # Direct import modules  
+│   └── quick-start.md               # Installation guide
+├── architecture/
+│   ├── overview.md                  # System architecture
+│   ├── configuration.md             # Configuration system
+│   └── navigation.md                # Navigation system
 ├── tutorials/
-│   ├── docs-setup.md         # Documentation tutorial
-│   └── adding-modules.md     # Development guides
-└── gen_ref_pages.py          # Auto-generation script
+│   ├── adding-sub-app.md            # Sub-app creation
+│   ├── role-management.md           # User and role management
+│   └── configuration.md             # Configuration patterns
+├── SUB_APP_DEVELOPMENT_GUIDE.md     # Comprehensive sub-app guide
+└── cmake_installation_guide.md      # CMake setup (for dependencies)
 ```
 
-### Writing Documentation
+### Deployment
 
-**Add Google-style docstrings to your code:**
+**GitHub Pages (configurable):**
 
-```python
-def calculate_total(items: list[float], tax_rate: float = 0.1) -> float:
-    """Calculate total cost including tax.
-    
-    Args:
-        items: List of item costs
-        tax_rate: Tax rate as decimal (default: 0.1)
-        
-    Returns:
-        Total cost including tax
-        
-    Example:
-        >>> calculate_total([10.0, 20.0], 0.05)
-        31.5
-    """
-    subtotal = sum(items)
-    return subtotal * (1 + tax_rate)
-```
-
-**mkdocstrings automatically generates beautiful API documentation from these docstrings!**
-
-### Customization
-
-- **Theme colors** and styling in `mkdocs.yml`
-- **Navigation structure** for your content
-- **Plugin configuration** for advanced features
-- **Custom CSS** for branded appearance
-
-### Deployment Options
-
-#### GitHub Pages (Automated if enables)
-
-**Configurable deployment!** You can easily enable/disable GitHub Pages deployment:
-
-**Quick Toggle Commands:**
 ```bash
 # Enable GitHub Pages deployment
 ./manage_github_pages.sh enable
 
-# Disable GitHub Pages deployment  
+# Disable deployment
 ./manage_github_pages.sh disable
 
-# Check current status
+# Check status
 ./manage_github_pages.sh status
 ```
 
-**Manual Configuration:**
-Edit `project.toml` to control deployment:
-```toml
-[documentation]
-github_pages_enabled = true  # Set to false to disable
-```
+## Logging System
 
-**Setup Steps:**
-1. **Enable GitHub Pages in your repository:**
-   - Go to repository Settings → Pages  
-   - Source: "GitHub Actions"
-   - Save settings
+Toybox uses a hierarchical logging system following Python best practices.
 
-2. **Configure deployment (optional):**
-   ```bash
-   ./manage_github_pages.sh enable  # Enable automatic deployment
-   ```
+### Architecture
 
-3. **Push your changes:**
-   ```bash
-   git add .
-   git commit -m "Setup documentation with configurable GitHub Pages"
-   git push origin main
-   ```
+- **Modules define loggers** but never configure handlers
+- **Entry points configure logging** (toybox.py, sub-apps in standalone mode)
+- **Hierarchical naming** for granular control
 
-4. **Access your docs:**
-   - URL: `https://your-username.github.io/your-repo-name`
-   - Auto-updates when `github_pages_enabled = true`
-   - Deployment skipped when `github_pages_enabled = false`
-
-**Features:**
-- Easy on/off toggle via management script
-- Configuration file (`project.toml`) controls deployment
-- Workflow respects settings and skips deployment when disabled
-- Status checking to see current configuration
-
-**GitHub Actions workflow included:** `.github/workflows/docs.yml`
-
-#### Other Platforms
-- **Netlify** or **Vercel** (connect repository)
-- **Custom server** (static HTML output with `mkdocs build`)
-
-See the [Documentation Setup Tutorial](docs/tutorials/docs-setup.md) for complete configuration details.
-
-### 4. Initialize the Environment
-
-```bash
-# Create virtual environment and install dependencies
-uv sync
-
-# Or install with development tools
-uv sync --extra dev
-
-# Install everything (all optional dependencies)
-uv sync --all-extras
-```
-
-### 4. Activate the Environment
-
-```bash
-# Activate the virtual environment
-source .venv/bin/activate  # On Linux/macOS
-# or
-.venv\Scripts\activate     # On Windows
-
-# Or run commands directly with uv
-uv run python your_script.py
-# when the project is built on top of those frameworks such like streamlit, run it similarly as usual but in uv
-uv run streamlit run app.py
-```
-
-## Dependency Management with uv
-
-### Core Commands
-
-```bash
-# Install core dependencies only
-uv sync
-
-# Install with specific optional dependency groups
-uv sync --extra dev
-uv sync --extra enhanced
-uv sync --extra name-of-subproject
-
-# Install multiple groups
-uv sync --extra dev --extra enhanced
-
-# Install everything
-uv sync --all-extras
-```
-
-### Adding Dependencies
-
-uv automatically updates the dependency sections in `pyproject.toml` when you add packages, while you maintain the project metadata and configuration manually.
-
-```bash
-# Add a new core dependency
-uv add pandas
-
-# Add to development dependencies
-uv add --optional-group dev pytest
-
-# Add to a custom group
-uv add --optional-group enhanced streamlit-authenticator
-
-# Add with version constraints
-uv add "numpy>=1.21.0,<2.0"
-```
-
-### Updating Dependencies
-
-```bash
-# Update all dependencies
-uv sync --upgrade
-
-# Update specific package
-uv sync --upgrade-package pandas
-```
-
-## Project Structure
-
-```
-your-project/
-├── .git/                   # Git repository
-├── .gitignore             # Git ignore rules
-├── README.md              # This file
-├── pyproject.toml         # Project configuration and dependencies
-├── .venv/                 # Virtual environment (created by uv sync)
-└── src/                   # Source code directory
-    ├── __init__.py
-    ├── main.py           # Your main application
-    ├── shared/           # Shared modules
-    └── ...
-```
-
-## Dependency Groups
-
-The template includes several pre-configured dependency groups:
-
-### Core Dependencies
-Always installed with `uv sync`:
-- `streamlit` - Web app framework
-- `pandas` - Data manipulation
-- `numpy` - Numerical computing
-- `pyyaml` - YAML parsing
-- `requests` - HTTP client
-- And more...
-
-### Optional Groups
-
-**Development (`dev`)**: Uncomment in `pyproject.toml` to enable
-- `pytest` - Testing framework
-- `black` - Code formatting
-- `flake8` - Linting
-- `mypy` - Type checking
-- `pre-commit` - Git hooks
-
-**Enhanced (`enhanced`)**: Uncomment in `pyproject.toml` to enable
-- `streamlit-authenticator` - Authentication
-- `streamlit-option-menu` - Enhanced UI
-- `duckdb` - In-memory analytics
-
-**Custom groups**: Define your own based on project needs
-
-## Common Workflows
-
-### Starting Development
-
-```bash
-# 1. Clone/create your project
-git clone <your-repo-url>
-cd your-project
-
-# 2. Install dependencies
-uv sync --extra dev
-
-# 3. Start coding in src/
-```
-
-### Running Your Application
-
-```bash
-# Run with uv (recommended)
-uv run python src/main.py
-uv run streamlit run app.py
-
-# Or activate environment first
-source .venv/bin/activate
-python src/main.py
-streamlit run app.py
-```
-
-### Testing
-
-```bash
-# Install test dependencies
-uv sync --extra dev
-
-# Run tests
-uv run pytest
-```
-
-## Why uv?
-
-- **Speed**: 10-100x faster than pip for dependency resolution
-- **Reliability**: Deterministic, reproducible installations
-- **Modern**: Built with Rust, designed for Python 3.12+
-- **Compatible**: Drop-in replacement for pip/pip-tools
-- **All-in-one**: Manages Python versions, virtual environments, and dependencies
-
-## Configuration Details
-
-### pyproject.toml Structure
-
-The `pyproject.toml` file contains:
-- **Project metadata**: name, version, description, authors
-- **Core dependencies**: Required packages
-- **Optional dependencies**: Grouped by feature/purpose
-- **Build configuration**: For packaging and distribution
-- **Tool configuration**: Settings for linters, formatters, etc.
-
-### Environment Management
-
-uv automatically:
-- Creates `.venv/` directory for virtual environment
-- Manages Python version compatibility
-- Handles dependency resolution and conflict detection
-- Creates lock files for reproducible builds
-
-## Customization
-
-1. **Update project metadata** in `pyproject.toml`
-2. **Modify dependencies** for your specific needs
-3. **Uncomment tool configurations** (black, mypy, pytest) as needed
-4. **Add your source code** in the `src/` directory
-5. **Update this README** with project-specific information
-
-## Migration from pip/conda
-
-If you're coming from pip or conda:
-
-```bash
-# From requirements.txt
-uv add $(cat requirements.txt)
-
-# From conda environment
-conda list --export > conda-deps.txt
-# Then manually add relevant packages with uv add
-```
-
-## Getting Help
-
-- [uv documentation](https://github.com/astral-sh/uv)
-- [Python packaging guide](https://packaging.python.org/)
-- [pyproject.toml reference](https://pep.python.org/pep-0621/)
-
-## Logging Setup
-
-This template implements a comprehensive logging system following Python logging best practices with a **hierarchical logger pattern**. 
-
-### Architecture Overview
-
-```
-new_python_repo                    # Root package logger
-├── new_python_repo.libs          # Package modules
-├── new_python_repo.demo_app       # Demo applications
-└── new_python_repo.logging_utils  # Logging utilities
-```
-
-**Key Principle**: Modules define loggers but never configure handlers/levels - configuration happens at entry points only.
-
-### Module-Level Logging Pattern
-
-All `.py` files follow this standard setup:
+### Module Pattern
 
 ```python
 import logging
 
-# Configure module-level logger - NO handlers, NO setLevel
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 def my_function():
-    logger.info("Function executed successfully")
-    logger.debug("Detailed debug information")
+    logger.info("Function executed")
+    logger.debug("Debug information")
 ```
 
-### Entry Point Configuration
+### Configuration
 
-**For Streamlit apps** (already configured in demo apps):
+**Main application (`toybox.py`):**
 ```python
-# Configure logging for Streamlit app (only if not already configured)
-if not logging.getLogger().handlers:
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler()]
-    )
-    
-    # Set levels for different components
-    logging.getLogger('new_python_repo').setLevel(logging.INFO)
-    logging.getLogger('streamlit').setLevel(logging.WARNING)
+import logging.config
+
+logging.config.fileConfig('logging.ini')
 ```
 
-**For module testing** (included in all modules):
+**Standalone sub-apps:**
 ```python
 if __name__ == "__main__":
-    import sys
-    import logging
-    
-    # Test-specific logging (terminal only, configurable level)
     logging.basicConfig(
-        level=logging.DEBUG,  # Change to INFO/WARNING as needed
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler(sys.stdout)],
-        force=True
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
 ```
 
-### Advanced Logging Utilities
+**Configuration file (`logging.ini`):**
+```ini
+[loggers]
+keys=root,toybox
 
-The template includes `src/libs/logging_utils.py` with enhanced functionality:
+[logger_toybox]
+level=INFO
+handlers=console
+qualname=toybox
+propagate=0
 
-```python
-from libs.logging_utils import set_logger_w_obj_name, setup_development_logging
+[handlers]
+keys=console
 
-# Function-level hierarchical logging
-def process_data(data):
-    logger = set_logger_w_obj_name()  # Creates: 'module.function_name'
-    logger.info("Processing data")
-
-# Class method hierarchical logging  
-class AnalyticsEngine:
-    def run_query(self, query):
-        logger = set_logger_w_obj_name()  # Creates: 'module.ClassName.method_name'
-        logger.info("Running query")
-
-# Quick development setup
-setup_development_logging(level=logging.DEBUG)
+[handler_console]
+class=StreamHandler
+level=INFO
+formatter=detailed
+args=(sys.stdout,)
 ```
 
-### Testing the Logging System
+## Testing
 
-Test individual modules with built-in logging:
+### Running Sub-Apps in Standalone Mode
+
 ```bash
-# Test package module with hierarchical logging
-python src/libs/example_module1.py
+# Test individual apps
+python apps/demo_app/main.py
+streamlit run apps/demo_app/main.py
 
-# Test direct import module with validation logging  
-python src/demo_sub_app/example_module2.py
+# Test with UV
+uv run python apps/demo_app/main.py
+uv run streamlit run apps/demo_app/main.py
+```
 
-# Test logging utilities
-python src/libs/logging_utils.py
+### Validation
 
-# Test configuration script with verbose logging
+```bash
+# Check configuration validity
+python check_config.py
+
+# Verbose mode for detailed checks
 python check_config.py --verbose
 ```
 
-### When to Use Each Approach
+## Troubleshooting
 
-| Context | Use Module Logger | Use Hierarchical Logger |
-|---------|------------------|------------------------|
-| **General operations** | `logger = logging.getLogger(__name__)` | No |
-| **Granular debugging** | No | `logger = set_logger_w_obj_name()` |
-| **Complex workflows** | No | Yes |
-| **Function-level tracing** | No | Yes |
-| **Performance monitoring** | Yes | Yes |
+### Import Errors
 
-### Benefits of This Approach
+**Problem:** `ModuleNotFoundError: No module named 'shared'`
 
-- **Clean separation**: Modules stay configuration-agnostic
-- **Flexible control**: Entry points control logging behavior  
-- **Hierarchical tracking**: Detailed function/method-level tracing
-- **Production ready**: Proper log levels and third-party suppression
-- **Development friendly**: Easy debugging with detailed output
+**Solution:** Ensure `sys.path` includes apps directory:
+```python
+import sys
+from pathlib import Path
+
+if __name__ == "__main__":
+    apps_dir = str(Path(__file__).parent.parent)
+    if apps_dir not in sys.path:
+        sys.path.insert(0, apps_dir)
+```
+
+### Navigation Not Showing Pages
+
+**Problem:** Added page to configuration but it doesn't appear
+
+**Checklist:**
+1. Page defined in `config/projects.yaml`?
+2. Page listed in `config/navigation.yaml` section?
+3. Section included in user's role?
+4. File path correct in `projects.yaml`?
+
+### Authentication Issues
+
+**Problem:** Cannot login with credentials
+
+**Solutions:**
+1. Verify password hash generated with bcrypt
+2. Check role exists in `navigation.yaml`
+3. Validate `auth.yaml` YAML syntax
+4. Ensure cookie key is set correctly
+
+## Best Practices
+
+### Configuration Management
+
+✅ **DO:**
+- Use YAML for all configuration
+- Keep credentials in `auth.yaml` (not in code)
+- Document role permissions
+- Use descriptive app keys and names
+
+❌ **DON'T:**
+- Hardcode navigation in Python
+- Store passwords in plain text
+- Mix configuration with application logic
+- Use relative imports in sub-apps
+
+### Sub-App Development
+
+✅ **DO:**
+- Implement dual-mode execution pattern
+- Use absolute imports from `apps/` directory
+- Add comprehensive docstrings
+- Test standalone before integration
+
+❌ **DON'T:**
+- Rely on package context (use sys.path)
+- Use relative imports
+- Assume execution directory
+- Skip standalone testing
+
+### Code Organization
+
+✅ **DO:**
+- Keep shared utilities in `apps/shared/`
+- One main.py per sub-app
+- Separate business logic from UI
+- Use type hints
+
+❌ **DON'T:**
+- Duplicate utility functions
+- Mix concerns in single file
+- Skip error handling
+- Ignore logging best practices
+
+## Migration from Old Structure
+
+If migrating from the old "new-python-repo" template:
+
+1. **Update directory structure:**
+   ```bash
+   mv src/ apps/
+   mv apps/libs apps/shared
+   ```
+
+2. **Update imports:**
+   ```python
+   # Old
+   from libs.utils import something
+   
+   # New
+   from shared.utils import something
+   ```
+
+3. **Remove old demo scripts:**
+   ```bash
+   rm run_demo.sh
+   ```
+
+4. **Update pyproject.toml:**
+   ```toml
+   # Old
+   packages = ["src/libs"]
+   
+   # New
+   packages = ["apps/shared", "apps/demo_app"]
+   ```
+
+5. **Create configuration files:**
+   - `config/projects.yaml`
+   - `config/navigation.yaml`
+   - `config/auth.yaml`
+
+## Contributing
+
+See the [Sub-App Development Guide](docs/SUB_APP_DEVELOPMENT_GUIDE.md) for comprehensive development guidelines.
+
+## Resources
+
+- **UV Documentation:** https://github.com/astral-sh/uv
+- **Streamlit Documentation:** https://docs.streamlit.io/
+- **MkDocs Documentation:** https://www.mkdocs.org/
+- **Python Packaging Guide:** https://packaging.python.org/
+
+## License
+
+MIT License - see LICENSE file for details
 
 ---
 
-**Happy coding!** 
+**Built with Streamlit and UV**

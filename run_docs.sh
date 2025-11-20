@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Documentation server script for new-python-repo template
+# Documentation server script for Toybox 2.0
 # This script starts the MkDocs development server
 
 set -e  # Exit on any error
 
-echo "New Python Repo - Documentation Server"
-echo "========================================="
+echo "Toybox 2.0 - Documentation Server"
+echo "===================================="
 echo
 
 # Check if uv is installed

@@ -1,18 +1,21 @@
 # Quick Start Guide
 
-Get up and running with the New Python Repo Template in minutes!
+Get up and running with Toybox 2.0 in minutes.
 
 ## Prerequisites
 
-- **Python 3.12+**
-- **Git** (for cloning)
-- **uv** (Python package manager)
+- **Python 3.12+** installed
+- **Git** for cloning the repository
+- Basic understanding of YAML configuration files
+- Familiarity with Streamlit (helpful but not required)
 
-## Step 1: Install uv
+## Installation
 
-If you don't have `uv` installed:
+### Step 1: Install UV Package Manager
 
-=== "macOS/Linux"
+UV is a modern, blazing-fast Python package manager written in Rust.
+
+=== "Linux/macOS"
     ```bash
     curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
@@ -22,108 +25,320 @@ If you don't have `uv` installed:
     powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
 
-=== "Via pip"
+=== "With pip"
     ```bash
     pip install uv
     ```
 
-## Step 2: Create Your Project
+Verify installation:
+```bash
+uv --version
+```
 
-### Option A: Use GitHub Template
-
-1. Click "Use this template" on GitHub
-2. Create your new repository
-3. Clone it locally:
+### Step 2: Clone Repository
 
 ```bash
-git clone https://github.com/your-username/your-project-name.git
-cd your-project-name
+cd /opt/projects  # Or your preferred directory
+git clone <repository-url> toybox2
+cd toybox2
 ```
 
-### Option B: Clone Directly
+### Step 3: Install Dependencies
 
-```bash
-git clone https://github.com/your-username/new-python-repo.git my-project
-cd my-project
-rm -rf .git  # Remove template git history
-git init     # Start fresh
-```
-
-## Step 3: Install Dependencies
-
-```bash
-# Install core dependencies only
-uv sync
-
-# Or install everything (recommended for exploring)
-uv sync --all-extras
-
-# Or install specific groups
-uv sync --extra docs --extra dev
-```
-
-## Step 4: Try the Demos
-
-```bash
-# Interactive demo selection
-./run_demo.sh
-
-# Or run specific demos
-./run_demo.sh 1  # Package-based imports
-./run_demo.sh 2  # Direct module imports
-```
-
-## Step 5: Customize for Your Project
-
-### Update Project Metadata
-
-Edit `pyproject.toml`:
-
-```toml
-[project]
-name = "your-project-name"           # ← Change this
-version = "0.1.0"
-description = "Your project description"  # ← Change this
-authors = [
-    {name = "Your Name", email = "your.email@example.com"}  # ← Change this
-]
-```
-
-### Add Your Code
-
-Choose your preferred structure:
-
-=== "Package Approach"
+=== "Core Only"
     ```bash
-    mkdir -p src/mypackage
-    echo "# Your package" > src/mypackage/__init__.py
-    echo "def hello(): return 'Hello World!'" > src/mypackage/utils.py
+    # Install essential dependencies
+    uv sync
     ```
 
-=== "Direct Module Approach"
+=== "All Features"
     ```bash
-    mkdir -p src/myapp
-    echo "# Your app" > src/myapp/__init__.py
-    echo "def hello(): return 'Hello World!'" > src/myapp/utils.py
+    # Install everything including optional sub-apps
+    uv sync --all-extras
     ```
 
-## Step 6: Build Documentation
+=== "Selective Install"
+    ```bash
+    # Install core + specific features
+    uv sync --extra demo_app --extra docs
+    ```
 
-```bash
-# Install docs dependencies
-uv sync --extra docs
+This creates a virtual environment in `.venv/` and installs all configured packages.
 
-# Serve docs locally
-uv run mkdocs serve
+## Configuration
+
+### Step 1: Understand Configuration Files
+
+Toybox 2.0 uses three main configuration files:
+
+```
+config/
+├── projects.yaml      # Application metadata and file paths
+├── navigation.yaml    # Navigation structure and role permissions
+└── auth.yaml         # User credentials and authentication
 ```
 
-Visit [http://127.0.0.1:8000](http://127.0.0.1:8000) to see your docs!
+### Step 2: Configure Authentication
+
+Create `config/auth.yaml`:
+
+```yaml
+credentials:
+  usernames:
+    admin:
+      email: admin@example.com
+      name: Admin User
+      password: $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5UpWWaem.Nfua  # "admin"
+      role: admin
+    developer:
+      email: dev@example.com
+      name: Developer User
+      password: $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5UpWWaem.Nfua  # "password"
+      role: developer
+
+cookie:
+  expiry_days: 30
+  key: random_secret_key_change_this_in_production
+  name: toybox_auth_cookie
+
+preauthorized:
+  emails:
+    - admin@example.com
+```
+
+!!! warning "Security"
+    **Important:** The passwords above are examples. Generate your own bcrypt hashes:
+    
+    ```python
+    import streamlit_authenticator as stauth
+    hashed = stauth.Hasher(['your_password']).generate()
+    print(hashed[0])
+    ```
+    
+    Change the `cookie.key` to a random string in production!
+
+### Step 3: Verify Configuration Files
+
+Check that `config/projects.yaml` and `config/navigation.yaml` exist:
+
+```bash
+ls -la config/
+```
+
+You should see:
+- `projects.yaml` - Defines available applications
+- `navigation.yaml` - Defines navigation structure
+- `auth.yaml` - Your authentication configuration
+
+## Running Toybox
+
+### Start the Application
+
+```bash
+uv run --python 3.12 toybox.py
+```
+
+You should see:
+```
+You can now view your Streamlit app in your browser.
+
+Local URL: http://localhost:8501
+Network URL: http://192.168.1.x:8501
+```
+
+### Access the Application
+
+1. Open your browser to `http://localhost:8501`
+2. You'll see the login page
+3. Use credentials from your `auth.yaml`:
+   - **Username:** `admin`
+   - **Password:** `admin` (or whatever you configured)
+
+### Explore the Interface
+
+After logging in:
+
+1. **Welcome Page** - Introduction and overview
+2. **Demo Applications** - Example sub-applications
+3. **Navigation Sidebar** - Role-based page access
+4. **Logout** - Available in sidebar
+
+## Understanding the Structure
+
+### Application Layout
+
+```
+toybox2/
+├── config/               # Configuration files
+│   ├── auth.yaml        # Authentication
+│   ├── navigation.yaml  # Navigation structure
+│   └── projects.yaml    # Application definitions
+├── apps/                # Sub-applications
+│   ├── shared/         # Shared utilities
+│   ├── welcome/        # Welcome page
+│   └── demo_app/       # Demo application
+├── docs/               # Documentation
+├── toybox.py          # Main entry point
+└── pyproject.toml     # Project configuration
+```
+
+### Configuration Flow
+
+```mermaid
+graph LR
+    A[User Login] --> B{Authenticate}
+    B -->|Success| C[Get User Role]
+    C --> D[Load navigation.yaml]
+    D --> E[Filter Sections by Role]
+    E --> F[Load projects.yaml]
+    F --> G[Build Page List]
+    G --> H[Render Navigation]
+```
+
+1. User authenticates with credentials from `auth.yaml`
+2. System determines user role
+3. `navigation.yaml` defines which sections the role can access
+4. `projects.yaml` provides metadata for each page
+5. Dynamic navigation is generated
 
 ## Next Steps
 
-- **[Learn Import Patterns](import-patterns.md)** - Understand module organization
-- **[Explore Demos](demos.md)** - See practical examples
-- **[Set Up Documentation](../tutorials/docs-setup.md)** - Customize your docs
+<div class="grid cards" markdown>
+
+-   :material-code-braces:{ .lg .middle } **Create Your First Sub-App**
+
+    ---
+
+    Learn to develop and integrate new applications
+    
+    [:octicons-arrow-right-24: Sub-App Development Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)
+
+-   :material-cog:{ .lg .middle } **Customize Configuration**
+
+    ---
+
+    Understand YAML configuration patterns
+    
+    [:octicons-arrow-right-24: Configuration Guide](../architecture/configuration.md)
+
+-   :material-account-multiple:{ .lg .middle } **Manage Users & Roles**
+
+    ---
+
+    Add users and configure permissions
+    
+    [:octicons-arrow-right-24: Role Management](../tutorials/role-management.md)
+
+-   :material-file-tree:{ .lg .middle } **Architecture Deep Dive**
+
+    ---
+
+    Understand the system design
+    
+    [:octicons-arrow-right-24: Architecture Overview](../architecture/overview.md)
+
+</div>
+
+## Quick Reference
+
+### Common Commands
+
+```bash
+# Start Toybox
+uv run --python 3.12 toybox.py
+
+# Install new dependency
+uv add package-name
+
+# Update dependencies
+uv sync --upgrade
+
+# Run standalone sub-app
+python apps/demo_app/main.py
+streamlit run apps/demo_app/main.py
+
+# View documentation locally
+uv sync --extra docs
+uv run mkdocs serve                    # localhost only
+uv run mkdocs serve -a 0.0.0.0:8011    # all network interfaces
+```
+
+### Configuration Quick Edit
+
+```bash
+# Edit user credentials
+nano config/auth.yaml
+
+# Edit navigation structure
+nano config/navigation.yaml
+
+# Edit application metadata
+nano config/projects.yaml
+
+# Restart Toybox to apply changes
+# (Ctrl+C to stop, then rerun toybox.py)
+```
+
+## Troubleshooting
+
+### Cannot Import Streamlit
+
+**Problem:** `ModuleNotFoundError: No module named 'streamlit'`
+
+**Solution:**
+```bash
+uv sync  # Reinstall dependencies
+```
+
+### Login Page Not Showing
+
+**Problem:** Blank page or error on startup
+
+**Solution:**
+1. Check `config/auth.yaml` exists
+2. Verify YAML syntax (no tabs, proper indentation)
+3. Check console for error messages
+
+### Navigation Not Appearing
+
+**Problem:** Logged in but no pages visible
+
+**Solution:**
+1. Verify user role in `auth.yaml`
+2. Check role has sections in `navigation.yaml`
+3. Ensure page paths in `projects.yaml` are correct
+
+### Import Errors in Sub-Apps
+
+**Problem:** `ModuleNotFoundError: No module named 'shared'`
+
+**Solution:**
+Ensure sub-app includes sys.path setup:
+```python
+import sys
+from pathlib import Path
+
+if __name__ == "__main__":
+    apps_dir = str(Path(__file__).parent.parent)
+    if apps_dir not in sys.path:
+        sys.path.insert(0, apps_dir)
+```
+
+## Getting Help
+
+- **[Troubleshooting Guide](../architecture/troubleshooting.md)** - Common issues and solutions
+- **[GitHub Issues](https://github.com/your-username/toybox2/issues)** - Report bugs
+- **[Architecture Documentation](../architecture/overview.md)** - Understand the system
+- **[Sub-App Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)** - Development patterns
+
+---
 
 !!! success "You're Ready!"
-    Your modern Python project is now set up with fast dependency management, documentation, and demo applications!
+    You now have a working Toybox 2.0 installation. Start exploring the demo applications or create your own sub-app!
+
+!!! tip "Development Mode"
+    For faster development, run sub-apps standalone:
+    ```bash
+    python apps/demo_app/main.py
+    ```
+    This bypasses authentication and navigation for quick testing.

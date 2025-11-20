@@ -1,10 +1,10 @@
-site_name: New Python Repo Template
-site_description: A modern Python project template with uv and best practices
+site_name: Toybox 2.0 Documentation
+site_description: Multi-Page Streamlit Application Framework with Role-Based Access Control
 site_author: Liam Hsieh, PhD
-site_url: https://liam-hsieh.github.io/new-python-repo
+site_url: https://liam-hsieh.github.io/toybox2
 
-repo_name: liam-hsieh/new-python-repo
-repo_url: https://github.com/liam-hsieh/new-python-repo
+repo_name: liam-hsieh/toybox2
+repo_url: https://github.com/liam-hsieh/toybox2
 
 theme:
   name: material
@@ -36,27 +36,17 @@ nav:
   - Home: index.md
   - Getting Started:
     - Quick Start: getting-started/quick-start.md
-    - Import Patterns: getting-started/import-patterns.md
-    - Demo Applications: getting-started/demos.md
-  - Setup Guides:
-    - GitHub Pages Setup: github-pages-setup.md
-  - API Reference:
-    - Overview: api/index.md
-    - Libs Package: api/libs.md
-    - Demo Sub App: api/demo-sub-app.md
-    - Detailed Reference:
-      - Auto-Generated Index: api/reference/index.md
-      - Libs:
-        - Example Module 1: api/reference/libs/example_module1.md
-        - Logging Utils: api/reference/libs/logging_utils.md
-      - Demo Apps:
-        - Main Demo App: api/reference/demo_app.md
-        - Sub Demo App: api/reference/demo_sub_app/sub_demo_app.md
-        - Example Module 2: api/reference/demo_sub_app/example_module2.md
+  - Architecture:
+    - Overview: architecture/overview.md
+  - Guides:
+    - Sub-App Development: SUB_APP_DEVELOPMENT_GUIDE.md
+    - CMake Installation: cmake_installation_guide.md
   - Tutorials:
-    - Setting Up Documentation: tutorials/docs-setup.md
-    - GitHub Pages Configuration: tutorials/github-pages-config.md
-    - Logging Guide: tutorials/logging-guide.md
+    - Adding Sub-Applications: tutorials/adding-sub-app.md
+    - Testing Documentation: tutorials/documentation-testing.md
+    - Production Documentation Server: tutorials/documentation-production-server.md
+  - Setup:
+    - GitHub Pages: github-pages-setup.md
 
 plugins:
   - search

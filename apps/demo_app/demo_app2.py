@@ -20,7 +20,8 @@ Author: New Python Repo Template
 import streamlit as st
 import logging
 # it will work if the repo is installed as a package by uv
-from example_module2 import import_checking2, process_text, validate_input
+from libs.logging_utils import set_logger_w_obj_name
+from demo_package.demo_module2 import import_checking2, process_text, validate_input
 
 
 # Configure logging for Streamlit app (only if not already configured)

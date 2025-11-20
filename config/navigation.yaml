@@ -1,0 +1,100 @@
+# Navigation Configuration for Toybox 2.0
+# User role assignments (loaded from database)
+user_assignments:
+  # Will be populated from database configuration
+  # Format: idsid -> role mapping
+  default_role: "viewer"
+  lhsieh: "admin"
+  modong: "developer"
+
+# Role-based access control
+roles:
+  admin:
+    name: "Administrator"
+    description: "Full system access"
+    permissions:
+      - all_projects
+      - user_management
+      - system_configuration
+    sections:
+      - welcome
+      - demo_apps
+      - utilities
+      - system
+
+  
+  developer:
+    name: "Developer"
+    description: "Development tools and API access"
+    permissions:
+      - development_tools
+      - api_access
+      - pipeline_management
+    sections:
+      - welcome
+      - demo_apps
+      - utilities
+      - system
+  
+  visitor:
+    name: "Visitor"
+    description: "Read-only dashboard access"
+    permissions:
+      - dashboard_view
+    sections:
+      - welcome
+      - system
+
+# Navigation sections
+sections:
+  welcome:
+    title: "👋 Welcome"
+    description: "Welcome page and introduction"
+    pages:
+      - welcome
+  
+  demo_apps:
+    title: "🛠️ Demo Apps"
+    description: "Demonstration applications for various features"
+    pages:
+      - demo_app1
+      - demo_app2
+
+
+  utilities:
+    title: "🛠️ Utilities"
+    description: "Miscellaneous tools and utilities"
+    pages:
+      - plt_practice
+  
+  system:
+    title: "⚙️ System"
+    description: "System pages and administration"
+    pages:
+      - dashboard
+      - analytics
+      - admin
+    
+  # analytics:
+  #   title: "📊 Analytics"
+  #   description: "Data and application analysis"
+  #   pages:
+  #     - excel_macro
+  #     - db_analytics
+  #     - reports
+    
+  # data_tools:
+  #   title: "🔧 Data Tools"
+  #   description: "Data management and processing tools"
+  #   pages:
+  #     - api_explorer
+  #     - snow_dumper
+  #     - mm_maintenance
+    
+  # administration:
+  #   title: "⚙️ Administration"
+  #   description: "System administration and configuration"
+  #   pages:
+  #     - system_config
+  #     - user_manager
+
