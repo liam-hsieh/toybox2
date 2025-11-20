@@ -154,9 +154,9 @@ with col2:
     create_info_card(
         "🔗 Quick Links",
         """
-        • <a href="https://e2esol.intel.com:4002/" target="_blank">Original Toybox</a><br>
-        • <a href="mailto:liam.hsieh@intel.com">Support Contact</a><br>
-        • <a href="https://liamhsieh.intel.com/" target="_blank">Developer Website</a><br>
+        • <a href="https://e2esol.xxx.com:4002/" target="_blank">Original Toybox</a><br>
+        • <a href="mailto:liam.hsieh@xxx.com">Support Contact</a><br>
+        • <a href="https://liamhsieh.xxx.com/" target="_blank">Developer Website</a><br>
         • <a href="#" onclick="window.location.reload()">Refresh Page</a>
         """,
         "success"

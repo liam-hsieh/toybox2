@@ -137,7 +137,7 @@ def create_sidebar_footer():
             - `Ctrl + R` - Refresh current page
             - `Ctrl + Shift + R` - Force reload
             
-            **Support:** [liam.hsieh@intel.com](mailto:liam.hsieh@intel.com)
+            **Support:** [liam.hsieh@xxx.com](mailto:liam.hsieh@xxx.com)
             """)
         
         # System status
