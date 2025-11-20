@@ -19,8 +19,13 @@ Author: New Python Repo Template
 
 import streamlit as st
 import logging
+import os
+from dotenv import load_dotenv
 # it will work if the repo is installed as a package by uv
 from demo_package.demo_module1 import import_checking1, calculate_sum
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging for Streamlit app (only if not already configured)
 if not logging.getLogger().handlers:
@@ -80,6 +85,37 @@ if numbers_input:
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
         st.error(f"Error: {str(e)}")
+
+# Environment Variables Demo Section
+st.divider()
+st.subheader("Environment Variables Demo")
+st.write("Demonstrating how to load secret configurations from `.env` file")
+
+# Check for example environment variables
+api_key = os.getenv("DEMO_API_KEY")
+database_url = os.getenv("DEMO_DATABASE_URL")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.write("**DEMO_API_KEY**")
+    if api_key:
+        st.success(f"✓ Found: `{api_key[:10]}...`" if len(api_key) > 10 else f"✓ Found: `{api_key}`")
+        logger.info("DEMO_API_KEY successfully loaded from .env")
+    else:
+        st.warning("✗ Not found in .env file")
+        logger.warning("DEMO_API_KEY not found in environment")
+
+with col2:
+    st.write("**DEMO_DATABASE_URL**")
+    if database_url:
+        st.success(f"✓ Found: `{database_url[:20]}...`" if len(database_url) > 20 else f"✓ Found: `{database_url}`")
+        logger.info("DEMO_DATABASE_URL successfully loaded from .env")
+    else:
+        st.warning("✗ Not found in .env file")
+        logger.warning("DEMO_DATABASE_URL not found in environment")
+
+st.info("💡 **Tip:** Create a `.env` file in the project root with these variables to see them loaded.")
 
 # Footer
 st.divider()

@@ -87,7 +87,33 @@ preauthorized:
     - admin@example.com
 ```
 
-### 4. Run Toybox
+### 4. Configure Environment Variables (Optional)
+
+For applications that need secrets (API keys, database credentials):
+
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Edit with your values
+nano .env
+```
+
+Example `.env` content:
+
+```bash
+# Demo Application Variables
+DEMO_API_KEY=your_api_key_here
+DEMO_DATABASE_URL=postgresql://user:password@localhost:5432/mydb
+
+# Email Configuration
+SENDER=noreply@example.com
+PSW=your_smtp_password
+```
+
+See the [Environment Variables Tutorial](https://liam-hsieh.github.io/toybox2/tutorials/environment-variables/) for details.
+
+### 5. Run Toybox
 
 ```bash
 # Run the main application

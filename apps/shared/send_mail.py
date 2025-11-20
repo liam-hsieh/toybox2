@@ -1,25 +1,26 @@
 
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+# from shared.utils import parse_db_access
 
-from shared.utils import parse_db_access
+load_dotenv()
+# Load email credentials from a secure location
 
-db_access = parse_db_access("/opt/ssl/db.ini","kerberos")
+SENDER = os.getenv("SENDER", 'DoNotReply <sys@xxx.com>')
+PSW = os.getenv("PSW", None)
+USER = os.getenv("USER", None)
+SERVER = os.getenv("SERVER", 'smtpauth.xxx.com')
+PORT = os.getenv("PORT", 587)
 
-SENDER = 'DoNotReply <sys_e2esol@intel.com>'
 CONFIG = {
-    'sender': db_access.get("email"),
-    'sender_password' :db_access.get("password"),
+    'sender': SENDER, #db_access.get("email"),
+    'sender_password' : PSW,
     'receivers': [
-        "liam.hsieh@intel.com",
-        "sys-e2esol@intel.com"
-        #"rajbir.k.girn@intel.com",
-        # "marissa.mena@intel.com",
-        # "laura.n.sannes@intel.com",
-        # "lexey.sbriglia@intel.com",
-        # "amy.loomis@intel.com",
-        # "jeffrey.maclaren@intel.com"
+        "liam.hsieh@xxx.com",
+        "sys@xxx.com"
     ]
 }
 
@@ -37,11 +38,13 @@ def getDefaultReceivers():
 
 def send_mail(cookies_info, user_message):      
         #user_message = "My daughter told Santa that she wants all the junk food from Trader Joe's"#st.text_area("Your Message")
-        subject = "Visitor on E2E Solutions Station left a message"#st.text_input("Subject")
-        smtp_auth_user=CONFIG["sender"]
-        smtp_auth_password=CONFIG["sender_password"]
+        subject = "Visitor on Toybox left a message"#st.text_input("Subject")
+        smtp_auth_user=USER
+        smtp_auth_password=PSW
+        smtp_server=SERVER
+        smtp_port=PORT
 
-        subject = "Visitor on E2E Solutions Station left a message"
+        subject = "Visitor on Toybox left a message"
         # Email template
         body = f"""
         A visitor left a message for us.
@@ -58,7 +61,7 @@ def send_mail(cookies_info, user_message):
         message = f"Subject: {subject}\n\n{body}"
 
 
-        server = smtplib.SMTP('smtpauth.intel.com', 587)
+        server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
         server.login(smtp_auth_user, smtp_auth_password)        
         server.sendmail(SENDER, getDefaultReceivers(), message)

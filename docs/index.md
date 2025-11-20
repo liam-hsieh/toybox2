@@ -164,6 +164,14 @@ Toybox 2.0 uses a three-tier configuration system:
     
     [:octicons-arrow-right-24: View Tutorials](tutorials/adding-sub-app.md)
 
+-   :material-key:{ .lg .middle } **Environment Variables**
+
+    ---
+
+    Securely manage secrets with .env files
+    
+    [:octicons-arrow-right-24: Environment Setup](tutorials/environment-variables.md)
+
 -   :material-api:{ .lg .middle } **API Documentation**
 
     ---
