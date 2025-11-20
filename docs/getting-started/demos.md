@@ -245,8 +245,8 @@ Both demos include:
 After exploring the demos:
 
 1. **[Learn Import Patterns](import-patterns.md)** - Deep dive into module organization
-2. **[API Reference](../api/libs.md)** - See auto-generated documentation
-3. **[Documentation Setup](../tutorials/docs-setup.md)** - Learn to document your code
+2. **[Sub-App Development Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)** - Build your own applications
+3. **[API Documentation Tutorial](../tutorials/api-documentation.md)** - Generate API docs from code
 
 !!! tip "Experiment!"
     Try modifying the demo code to add your own functions and see how the import patterns work in practice.
