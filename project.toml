@@ -11,9 +11,25 @@ github_pages_enabled = false
 build_on_push = false
 build_strict = false  # Fail build on warnings
 
+# Auto-generate API documentation from source code
+# Enable automatic API docs generation from Python source files
+auto_generate_api_docs = true
+
+# Source directories for API documentation generation
+# Multiple directories can be specified as a list
+# Each directory will be scanned for Python files to document
+api_source_dirs = [
+    "apps/shared",
+    "apps/demo_app",
+    "src/libs"
+    # Add more directories as needed:
+    # "apps/utilities",
+    # "apps/analytics",
+]
+
 [project]
 # General project settings
-auto_generate_api_docs = false
+auto_generate_api_docs = true
 include_demo_apps = false
 
 # Future configuration options can be added here

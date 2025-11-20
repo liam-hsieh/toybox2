@@ -462,6 +462,32 @@ uv run mkdocs serve
 # Access at http://127.0.0.1:8000
 ```
 
+### Automatic API Documentation
+
+Toybox 2.0 can automatically generate API documentation from your Python source code.
+
+**Configuration in `project.toml`:**
+
+```toml
+[documentation]
+auto_generate_api_docs = true
+
+api_source_dirs = [
+    "apps/shared",
+    "apps/demo_app",
+    # Add your apps here
+]
+```
+
+**Features:**
+- Automatic generation from docstrings
+- Supports multiple source directories
+- Google-style docstring format
+- Cross-referenced API pages
+- Integrated with main documentation
+
+See the [API Documentation Tutorial](docs/tutorials/api-documentation.md) for complete setup instructions.
+
 ### Testing Documentation Locally
 
 To test documentation on your local network or from remote machines:
@@ -694,43 +720,6 @@ if __name__ == "__main__":
 - Skip error handling
 - Ignore logging best practices
 
-## Migration from Old Structure
-
-If migrating from the old "new-python-repo" template:
-
-1. **Update directory structure:**
-   ```bash
-   mv src/ apps/
-   mv apps/libs apps/shared
-   ```
-
-2. **Update imports:**
-   ```python
-   # Old
-   from libs.utils import something
-   
-   # New
-   from shared.utils import something
-   ```
-
-3. **Remove old demo scripts:**
-   ```bash
-   rm run_demo.sh
-   ```
-
-4. **Update pyproject.toml:**
-   ```toml
-   # Old
-   packages = ["src/libs"]
-   
-   # New
-   packages = ["apps/shared", "apps/demo_app"]
-   ```
-
-5. **Create configuration files:**
-   - `config/projects.yaml`
-   - `config/navigation.yaml`
-   - `config/auth.yaml`
 
 ## Contributing
 

@@ -164,6 +164,14 @@ Toybox 2.0 uses a three-tier configuration system:
     
     [:octicons-arrow-right-24: View Tutorials](tutorials/adding-sub-app.md)
 
+-   :material-api:{ .lg .middle } **API Documentation**
+
+    ---
+
+    Auto-generate API docs from source code
+    
+    [:octicons-arrow-right-24: API Guide](tutorials/api-documentation.md)
+
 -   :material-shield-account:{ .lg .middle } **Role Management**
 
     ---

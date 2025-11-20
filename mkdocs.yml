@@ -43,6 +43,7 @@ nav:
     - CMake Installation: cmake_installation_guide.md
   - Tutorials:
     - Adding Sub-Applications: tutorials/adding-sub-app.md
+    - API Documentation: tutorials/api-documentation.md
     - Testing Documentation: tutorials/documentation-testing.md
     - Production Documentation Server: tutorials/documentation-production-server.md
   - Setup:
