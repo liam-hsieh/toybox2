@@ -8,7 +8,7 @@
 github_pages_enabled = true
 
 # Documentation build settings
-build_on_push = false
+build_on_push = true
 build_strict = false  # Fail build on warnings
 
 # Auto-generate API documentation from source code

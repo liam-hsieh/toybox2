@@ -172,22 +172,6 @@ Toybox 2.0 uses a three-tier configuration system:
     
     [:octicons-arrow-right-24: API Guide](tutorials/api-documentation.md)
 
--   :material-shield-account:{ .lg .middle } **Role Management**
-
-    ---
-
-    Configure users and permissions
-    
-    [:octicons-arrow-right-24: Role Guide](tutorials/role-management.md)
-
--   :material-file-cog:{ .lg .middle } **Configuration**
-
-    ---
-
-    YAML configuration patterns
-    
-    [:octicons-arrow-right-24: Config Guide](architecture/configuration.md)
-
 </div>
 
 ## Core Concepts
@@ -290,16 +274,12 @@ from .utils import local_function
 
 Need help? Check out our:
 
-- **[Troubleshooting Guide](architecture/troubleshooting.md)** - Common issues and solutions
-- **[Best Practices](tutorials/best-practices.md)** - Recommended patterns
-- **[GitHub Issues](https://github.com/your-username/toybox2/issues)** - Report bugs or request features
+- **[Sub-App Development Guide](SUB_APP_DEVELOPMENT_GUIDE.md)** - Comprehensive development guide
+- **[GitHub Issues](https://github.com/liam-hsieh/toybox2/issues)** - Report bugs or request features
 
 ---
 
 !!! tip "Getting Started"
     New to Toybox 2.0? Start with the [Quick Start Guide](getting-started/quick-start.md) to get up and running in minutes!
-
-!!! info "Migration"
-    Coming from an older version? See the [Migration Guide](getting-started/migration.md) for upgrade instructions.
 
 

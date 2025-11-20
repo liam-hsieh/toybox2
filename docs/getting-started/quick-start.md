@@ -217,17 +217,9 @@ graph LR
 
     ---
 
-    Understand YAML configuration patterns
+    Understand system architecture
     
-    [:octicons-arrow-right-24: Configuration Guide](../architecture/configuration.md)
-
--   :material-account-multiple:{ .lg .middle } **Manage Users & Roles**
-
-    ---
-
-    Add users and configure permissions
-    
-    [:octicons-arrow-right-24: Role Management](../tutorials/role-management.md)
+    [:octicons-arrow-right-24: Architecture Overview](../architecture/overview.md)
 
 -   :material-file-tree:{ .lg .middle } **Architecture Deep Dive**
 
@@ -326,10 +318,10 @@ if __name__ == "__main__":
 
 ## Getting Help
 
-- **[Troubleshooting Guide](../architecture/troubleshooting.md)** - Common issues and solutions
-- **[GitHub Issues](https://github.com/your-username/toybox2/issues)** - Report bugs
 - **[Architecture Documentation](../architecture/overview.md)** - Understand the system
-- **[Sub-App Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)** - Development patterns
+- **[Sub-App Development Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)** - Development patterns
+- **[Adding Sub-Applications](../tutorials/adding-sub-app.md)** - Step-by-step tutorial
+- **[GitHub Issues](https://github.com/liam-hsieh/toybox2/issues)** - Report bugs
 
 ---
 

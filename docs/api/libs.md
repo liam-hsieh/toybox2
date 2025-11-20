@@ -46,10 +46,19 @@ def my_function():
 
 ## Detailed API Documentation
 
-For complete API documentation with all methods, parameters, and examples:
+### Example Module 1
 
-- **[Example Module 1](reference/libs/example_module1.md)** - Detailed API for package imports and utilities
-- **[Logging Utils](reference/libs/logging_utils.md)** - Complete logging utilities API reference
+::: libs.example_module1
+    options:
+      show_root_heading: true
+      show_source: false
+
+### Logging Utils
+
+::: libs.logging_utils
+    options:
+      show_root_heading: true
+      show_source: false
 
 ## Usage Patterns
 

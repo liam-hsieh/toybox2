@@ -53,10 +53,19 @@ result = obj.example_method("test data")
 
 ## Detailed API Documentation
 
-For complete API documentation:
+### Sub Demo App
 
-- **[Sub Demo App](reference/demo_sub_app/sub_demo_app.md)** - Streamlit application details
-- **[Example Module 2](reference/demo_sub_app/example_module2.md)** - Complete API for direct imports and logging
+::: demo_sub_app.sub_demo_app
+    options:
+      show_root_heading: true
+      show_source: false
+
+### Example Module 2
+
+::: demo_sub_app.example_module2
+    options:
+      show_root_heading: true
+      show_source: false
 
 ## When to Use This Pattern
 

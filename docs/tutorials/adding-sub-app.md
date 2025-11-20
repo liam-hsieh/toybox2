@@ -527,22 +527,6 @@ path: "apps/data_analyzer/main.py"
 
 <div class="grid cards" markdown>
 
--   :material-shield-account:{ .lg .middle } **Configure Roles**
-
-    ---
-
-    Control who can access your new app
-    
-    [:octicons-arrow-right-24: Role Management](role-management.md)
-
--   :material-file-cog:{ .lg .middle } **Advanced Configuration**
-
-    ---
-
-    Learn advanced YAML patterns
-    
-    [:octicons-arrow-right-24: Configuration Guide](../architecture/configuration.md)
-
 -   :material-code-braces:{ .lg .middle } **Sub-App Development Guide**
 
     ---
@@ -550,6 +534,22 @@ path: "apps/data_analyzer/main.py"
     Deep dive into development patterns
     
     [:octicons-arrow-right-24: Development Guide](../SUB_APP_DEVELOPMENT_GUIDE.md)
+
+-   :material-file-tree:{ .lg .middle } **Architecture Overview**
+
+    ---
+
+    Understand the system design
+    
+    [:octicons-arrow-right-24: Architecture Guide](../architecture/overview.md)
+
+-   :material-api:{ .lg .middle } **API Documentation**
+
+    ---
+
+    Auto-generate API docs
+    
+    [:octicons-arrow-right-24: API Guide](api-documentation.md)
 
 </div>
 

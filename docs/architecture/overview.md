@@ -573,7 +573,6 @@ WantedBy=multi-user.target
 
 ## Related Documentation
 
-- **[Configuration Guide](configuration.md)** - Detailed YAML configuration
 - **[Sub-App Development](../SUB_APP_DEVELOPMENT_GUIDE.md)** - Creating applications
-- **[Navigation System](navigation.md)** - Navigation implementation details
-- **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
+- **[Quick Start Guide](../getting-started/quick-start.md)** - Installation and setup
+- **[Adding Sub-Applications](../tutorials/adding-sub-app.md)** - Step-by-step tutorial
