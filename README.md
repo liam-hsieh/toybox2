@@ -216,31 +216,37 @@ Navigation is completely configuration-driven:
 
 ```python
 # apps/shared/utils.py
-def generate_dynamic_navigation(role: str) -> list:
-    """Generate navigation based on user role and YAML configuration."""
+def generate_dynamic_navigation(user_role, config):
+    """Generate navigation dynamically from configuration files"""
+    # 1. Get user's authorized sections from navigation.yaml
+    roles_config = config['navigation']['roles']
+    authorized_sections = roles_config[user_role]['sections']
     
-    # Load configuration files
-    projects = yaml.safe_load(open('config/projects.yaml'))
-    navigation = yaml.safe_load(open('config/navigation.yaml'))
+    # 2. For each authorized section, get page list
+    sections_config = config['navigation']['sections']
+    navigation_dict = {}
+
+    for project_key in authorized_sections:
+        section = sections_config[project_key]
+        section_pages = []
+
+        # 3. For each page in section, find app definition in projects.yaml
+        for app_key in section['pages']:
+            project_config = config['projects']["projects"].get(project_key)
+            app_config = _find_app_in_projects(app_key, project_config)
+            if app_config:
+                # 4. Create st.Page from projects.yaml metadata
+                page = st.Page(
+                    page=app_config['path'],
+                    title=app_config['title'],
+                    icon=app_config['icon']
+                )
+                section_pages.append(page)
+        
+        if section_pages:
+            navigation_dict[section['title']] = section_pages
     
-    # Get authorized sections for role
-    sections = navigation['roles'][role]['sections']
-    
-    # Build page list from configuration
-    pages = []
-    for section_key in sections:
-        section = navigation['sections'][section_key]
-        for page_key in section['pages']:
-            project, app = page_key.split('.')
-            app_config = projects['projects'][project]['apps'][app]
-            
-            pages.append(st.Page(
-                page=app_config['path'],
-                title=app_config['name'],
-                icon=app_config['icon']
-            ))
-    
-    return pages
+    return navigation_dict
 ```
 
 **Key Benefits:**
