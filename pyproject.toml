@@ -109,7 +109,7 @@ build-backend = "hatchling.build"
 packages = [
     "src/libs",
     "apps/shared",
-    "apps/demo_app/demo_package",
+    "apps/demo_app",
     # "src/demo_sub_app/example_module2.py",
 ]
 include = [
