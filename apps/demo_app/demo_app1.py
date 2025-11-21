@@ -22,7 +22,7 @@ import logging
 import os
 from dotenv import load_dotenv
 # it will work if the repo is installed as a package by uv
-from demo_package.demo_module1 import import_checking1, calculate_sum
+from demo_app.demo_package.demo_module1 import import_checking1, calculate_sum
 
 # Load environment variables from .env file
 load_dotenv()
